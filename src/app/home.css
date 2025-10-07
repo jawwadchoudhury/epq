@@ -1,0 +1,39 @@
+.logo-div {
+    display: flex;
+    position: absolute;
+    left: 44vw;
+    top: 3vh;
+    user-select: none;
+}
+.logo-text {
+    margin-top: 1vw;
+    margin-left: 1vw;
+    font-size: 3vw;
+}
+.logo-image {
+    width: 5vw;
+}
+.main-page {
+    margin-top: 20vh;
+}
+.canvas {
+    max-width: 100%;
+}
+/* MOBILE COMPATIBILITY */
+@media (width < 668px) {
+    .logo-div {
+        display: flex;
+        position: absolute;
+        left: 37vw;
+    }
+    .logo-image {
+        width: 12vw;
+    }
+
+    .logo-text {
+        font-size: 8vw;
+    }
+    .main-page {
+        margin-top: 14vh;
+    }
+}
