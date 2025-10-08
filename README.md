@@ -20,17 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Author's Note
 
-To learn more about Next.js, take a look at the following resources:
+This is my EPQ project, at the time of writing this it's very barebones but I'll get around to making it fully functional and all pretty.
+Here's my plan:
+- Set up simple web interface (my favourite framework is Next.JS, so I'll probably continue using it, it also allows free web hosting using Vercel), with an input for a video file, text to be encoded and a canvas for processing. (MediaRecorder API will be needed for the canvas)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Load and deconstruct the video into a series of frames, and extract the pixel data of each frame.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Convert the message into a binary stream, for extra security, I will probably encrypt this message into cypher text first, to make it slightly more imperceptible. Unicode will probably be used in order to represent these letters into binary, as it allows for any characters to be hidden, even foreign letters and emojis and symbols etc. Add a terminator to the end, this is for the decoding program to know whether a video is encoded with data or not, the easiest way to go around this is including some less commonly used sequence of Unicode characters. For example purposes: ӸӺڞ, these 3 random characters, to the program are encoded as U+04F8U+04FEU+069E, called a delimiter
 
-## Deploy on Vercel
+- Implement LSB encoding. This involves iterating through each frame, and getting the LSB of a pixel value. Corresponding with the binary stream - if the binary stream has a 1, you flip the last bit. This will create a very minimal change to the colour of that pixel, imperceivable to the human eye.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Create a processing loop. Once that frame has completed all the bits required, advance to the next frame, and redo the previous step.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Construct these frames back together and save it to the websites memory, allow it to be a downloadable artefact, and the program is completed.
+
+- For decoding - follow similar steps but the inverse of it. Read every LSB instead of writing, and construct a binary stream, this will leave you with cypher text. Decode the cypher text (using some sort of key, yet to be decided), and you have a string of text, which is what the end user put as their text. End program once delimiter is reached (defined earlier).     If no delimiter is found, then the video is probably not encoded.
