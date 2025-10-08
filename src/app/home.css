@@ -17,7 +17,10 @@
     margin-top: 20vh;
 }
 .canvas {
-    max-width: 100%;
+    max-width: 50%;
+}
+.video {
+    max-width: 50%;
 }
 /* MOBILE COMPATIBILITY */
 @media (width < 668px) {
