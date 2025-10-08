@@ -13,57 +13,51 @@ const hammersmith_one = Hammersmith_One({
  
 
 export default function Home() {
-  const [videoSrc, setVideoSrc] = useState("a");
-  const [status, setStatus] = useState("No status currently available");
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [videoSrc, setVideoSrc] = useState("a"); // Can't be empty otherwise errors are thrown
+  const [status, setStatus] = useState("No status currently available"); // Just a default status message
+  const videoRef = useRef<HTMLVideoElement>(null); // A pointer towards the video element
+  const canvasRef = useRef<HTMLCanvasElement>(null); // A pointer towards the canvas element
 
   const handleFileChange = (e:any) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0]; // Are there files uploaded? If so, fetch the first one (shouldn't really be an issue, assuming there is only one file uploaded at a time
 
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setVideoSrc(url);
-      setStatus(`Video loaded! ${url}`);
+    if (file) { // If that file exists
+      const url = URL.createObjectURL(file); // Create a BLOB (Binary Large Object) with a url (will be used as video source) 
+      setVideoSrc(url); // And set the videoSrc state as this BLOB
+      setStatus(`Video loaded! ${url}`); // Change status to confirmation that the video has loaded
     }
   }
 
   const extractFrameData = () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
+    const video = videoRef.current; // Allow the video to be whatever the pointer is facing to now
+    const canvas = canvasRef.current; // Allow the canvas to be whatever the pointer is facing to now
 
-    if (!video || !canvas) {
-      setStatus('Error: Video or canvas element not found.');
+    if (!video || !canvas) { // If there is no video or canvas element
+      setStatus('Error: Video or canvas element not found.'); // Let the user know, and stop running the function any further
       return;
     }
 
      try {
-      // Set the canvas dimensions to be the same as the video's
+      // Set canvas dimensions equal to video dimensions
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-
-      // Get the 2D drawing context of the canvas
-      const context = canvas.getContext('2d');
-      
-      // Draw the current frame of the video onto the canvas
-      // The parameters are: (image, dx, dy, dWidth, dHeight)
-      context?.drawImage(video, 0, 0, canvas.width, canvas.height);
+       
+      const context = canvas.getContext('2d'); // Retrieve the 2D context of this canvas
+    
+      context?.drawImage(video, 0, 0, canvas.width, canvas.height); // Draw the current frame onto the canvas (image, dx, dy, dWidth, dHeight)
 
       // Now, get the raw pixel data from the canvas
       // This returns an ImageData object with a `data` property (a Uint8ClampedArray)
       // The array is in the format [R1, G1, B1, A1, R2, G2, B2, A2, ...]
-      const imageData = context?.getImageData(0, 0, canvas.width, canvas.height);
+      const imageData = context?.getImageData(0, 0, canvas.width, canvas.height); // Get the raw pixel data, returns a Uint8ClampedArray, in the format [R1, G1, B2, A1, R2, G2, B2, A2, etc.]
       
-      setStatus(`Frame extracted! Image is ${imageData?.width}x${imageData?.height}. Check the console for pixel data.`);
-      
-      // For your project, this is where you would pass the `imageData` object
-      // to your LSB encoding function from Step 4 of the roadmap.
-      console.log('Extracted ImageData:', imageData);
-      console.log('Pixel data array:', imageData?.data);
+      setStatus(`Frame extracted! Image dimensions: ${imageData?.width}x${imageData?.height}`); // Let the user know the frames been extracted, and let them know the frame dimensions as well
+      console.log('Extracted ImageData:', imageData); // Log the frame data into the console
+      console.log('Pixel data array:', imageData?.data); // Log just the pixel array into the console
 
-    } catch (error:any) {
-      setStatus(`An error occurred: ${error.message}`);
-      console.error("Failed to extract frame:", error);
+    } catch (error:any) { // If an error is caught (FIX THE TYPE! I was being lazy...)
+      setStatus(`An error occurred: ${error.message}, let the site owner know (jawwadc@outlook.com`); // Set status as the error message
+      console.error("Failed to extract frame:", error); // Throw a console error, with more detailss
     }
   }
 
