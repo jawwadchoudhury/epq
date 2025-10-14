@@ -22,6 +22,14 @@
 .video {
     max-width: 50%;
 }
+.default-button {
+    padding: 25px;
+    background: #303030;
+    border-radius: 10px;
+}
+.default-button:hover {
+    cursor: pointer;
+}
 /* MOBILE COMPATIBILITY */
 @media (width < 668px) {
     .logo-div {
